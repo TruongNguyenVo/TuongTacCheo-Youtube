@@ -2,6 +2,8 @@ import json, sys, os, time,re,colorama,requests,time,random
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
+import doTDSTask # thêm thư viện trao đổi sub nếu muốn làm nhiệm vụ đó
 s = requests.Session()
 Dem_mang = 1
 Bien_so_profile = 0
@@ -45,6 +47,7 @@ def main():
 					exit()
 				
 			# exit()
+
 				
 			
 
@@ -59,16 +62,6 @@ def Start(tai_khoan,mat_khau,id_kenh,ten_profile,Bien_so_profile,Dem_nhiem_vu):
 		'submit': 'ĐĂNG NHẬP'
 	    }
 	check=s.post("https://tuongtaccheo.com/login.php",data=datal)
-	# # hd={
-	# # 	'Content-type': 'application/x-www-form-urlencoded'
-	# #     }
-	# # bd = {'access_token':'5e75d923c54e49037f0be4f9c2a05daa' }
-	# # a = s.post(f'https://tuongtaccheo.com/logintoken.php',headers=hd,data=bd)
-	# # ckttc = a.cookies
-	# # print(ckttc)
-	# # print(check.text)
-	# # ckttc = check.cookies
-	# # print(ckttc)
 	cookiettc={"x-requested-with":"XMLHttpRequest",}
 
 	requestc=s.get("https://tuongtaccheo.com/login.php",headers=cookiettc).text
@@ -76,8 +69,8 @@ def Start(tai_khoan,mat_khau,id_kenh,ten_profile,Bien_so_profile,Dem_nhiem_vu):
 	xr1 = requestc.split('id="soduchinh">')
 	xr2 = xr1[1].split('</strong>')
 	xu = xr2[0]
-	print('\033[1;37m â»\033[1;36mâ¥ \033[1;35mTên Tài Khoản: \033[1;36m' + user)
-	print('\033[1;37m â»\033[1;36mâ¥ \033[1;34mXu Hiện Tại: \033[1;33m' + xu) 
+	print('\033[1;3len(id)-1m â»\033[1;36mâ¥ \033[1;35mTên Tài Khoản: \033[1;36m' + user)
+	print('\033[1;3len(id)-1m â»\033[1;36mâ¥ \033[1;34mXu Hiện Tại: \033[1;33m' + xu) 
 
 	hd={"x-requested-with":"XMLHttpRequest"}
 	data = {
@@ -100,11 +93,9 @@ def rundelay(k):
     k=k-1
     print(' \033[1;31m=> \033[1;32m Đang Đợi Delay Khoảng:   '  +str(k), end='\r')
 def subYoutube(id, link,hd,ten_profile,Bien_so_profile,Dem_nhiem_vu):
-	# print(len(id))
-	# print(len(id) + 1 )
-	# exit()
 	if len(id) < 8:
-		print("Tạm Thời Hết Nhiệm Vụ")
+		# doTDSTask.TDSTask(chanel, driver)
+		print("Tạm Thời Hết Nhiệm Vụ TuongTacCheo")
 		rundelay(60)
 		Bien_so_profile = Bien_so_profile+1
 		main()
@@ -113,7 +104,8 @@ def subYoutube(id, link,hd,ten_profile,Bien_so_profile,Dem_nhiem_vu):
 	options.add_argument('profile-directory=Profile '+ten_profile)
 	options.add_argument('--mute-audio')
 	driver = webdriver.Chrome(executable_path=r'C:\\Program Files\\Google\Chrome\\Application\\chromedriver.exe', options=options)
-	driver.set_window_size(600,400)
+	driver.set_window_size(500,600)
+	# doTDSTask.TDSTask(chanel, driver):
 	#thu nho web
 	# driver.minimize_window()
 	spam = 0
@@ -126,39 +118,62 @@ def subYoutube(id, link,hd,ten_profile,Bien_so_profile,Dem_nhiem_vu):
 		except:
 			pass
 		try:
-			driver.find_element(By.XPATH,'//*[@id="subscribe-button"]/ytd-subscribe-button-renderer/tp-yt-paper-button/yt-formatted-string').click()
+			#tag = '//button[@aria-label = "Đăng ký"]'
+			#bấm vào nút đăng kí
+			driver.find_element(By.XPATH,'/html/body/ytd-app/div[1]/ytd-page-manager/ytd-watch-flexy/div[5]/div[1]/div/div[2]/ytd-watch-metadata/div/div[2]/div[1]/div/ytd-subscribe-button-renderer/yt-button-shape/button/yt-touch-feedback-shape/div/div[2]').click()
 			print("["+str(Dem_nhiem_vu)+"] >> "+"\033[1;33;40mSub >> "+"\033[92mĐã Làm Nhiệm Vụ Sub:>> "+id[y])
 			Dem_nhiem_vu = Dem_nhiem_vu+1
 			rundelay(2)
-			if y == 7:
-			# làm 7 nhiệm vụ sẽ nhận tiền
-			# do 7 task, will receive gold
+			if y == len(id)-1:
+			# làm len(id)-1 nhiệm vụ sẽ nhận tiền
+			# do len(id)-1 task, will receive gold
 				id_tong = id_tong +id[y]
 			else:
 				id_tong = id_tong +id[y] +','			
 			time.sleep(2)
-		except NoSuchElementException:	
-			pass
-		except:
+		except NoSuchElementException:
+			print('không kiếm được đường dẫn 1! Chuyển qua đường dẫn 2')
 			try:
 				
-				driver.find_element(By.XPATH,"/html/body/ytd-app/div[1]/ytd-page-manager/ytd-watch-flexy/div[5]/div[1]/div/div[2]/ytd-watch-metadata/div/div[2]/div[1]/div/ytd-subscribe-button-renderer/yt-button-shape/button/yt-touch-feedback-shape/div/div[2]").click()
+				driver.find_element(By.XPATH,"/html/body/ytd-app/div[1]/ytd-page-manager/ytd-watch-flexy/div[5]/div[1]/div/div[2]/div[len(id)-1]/div[2]/div[2]/ytd-video-secondary-info-renderer/div/div/div/ytd-subscribe-button-renderer/tp-yt-paper-button/yt-formatted-string").click()
+											  
 				print("["+str(Dem_nhiem_vu)+"] >> "+"\033[1;33;40mSub >> "+"\033[92mĐã Làm Nhiệm Vụ Sub:>> "+id[y])
 				Dem_nhiem_vu = Dem_nhiem_vu+1
-				if y == 7:
-				# làm 7 nhiệm vụ sẽ nhận tiền
-				# do 7 task, will receive gold
+				if y == len(id)-1:
+				# làm len(id)-1 nhiệm vụ sẽ nhận tiền
+				# do len(id)-1 task, will receive gold
 					id_tong = id_tong +id[y]
 				else:
 					id_tong = id_tong +id[y] +','			
 				time.sleep(2)
 
 			except:
-				print("lỗi Khác")
-				pass
-		if spam == 5:
-			exit()
-		if y == 7:
+				try:
+					print("lỗi Khác! Chuyển qua đường dẫn 3.")
+					driver.find_element(By.XPATH,'/html/body/ytd-app/div[1]/ytd-page-manager/ytd-watch-flexy/div[5]/div[1]/div/div[2]/div[7]/div[2]/div[2]/ytd-video-secondary-info-renderer/div/div/div/ytd-subscribe-button-renderer/tp-yt-paper-button/yt-formatted-string').click()
+					print("["+str(Dem_nhiem_vu)+"] >> "+"\033[1;33;40mSub >> "+"\033[92mĐã Làm Nhiệm Vụ Sub:>> "+id[y])
+					Dem_nhiem_vu = Dem_nhiem_vu+1
+					if y == len(id)-1:
+					# làm len(id)-1 nhiệm vụ sẽ nhận tiền
+					# do len(id)-1 task, will receive gold
+						id_tong = id_tong +id[y]
+					else:
+						id_tong = id_tong +id[y] +','			
+					time.sleep(2)
+				except Exception as e:
+					print("Không tìm được đường dẫn! ")
+					pass
+				
+
+		except Exception as e:
+			print('Lỗi khác nữa! Đang mệt làm biếng fix rồi')
+			# print(e)
+			pass
+			# driver.quit()
+
+		# if spam == 5:
+		# 	exit()
+		if y == len(id)-1:
 			try:		
 				nt=s.post("https://tuongtaccheo.com/youtube/kiemtien/subcheo/nhantien.php",data={"id":id_tong},headers=hd)
 				print(nt.json())
