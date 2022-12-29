@@ -37,7 +37,8 @@ def main():
 					# print("Đang Chạy Mật Khẩu TTC Là ",mat_khau)
 					Dem_mang = Dem_mang+5
 					# print('--------------------------------')
-					Start(tai_khoan,mat_khau,id_kenh,ten_profile,Bien_so_profile,Dem_nhiem_vu)
+					# global id_kenh
+					Start(tai_khoan, mat_khau, id_kenh, ten_profile, Bien_so_profile,Dem_nhiem_vu)
 
 				except IndexError:
 					print('Hết Profile! Đóng Chương Trình')
@@ -47,12 +48,6 @@ def main():
 					exit()
 				
 			# exit()
-
-				
-			
-
-
-			
 	except FileNotFoundError:
 		print("Không tìm được file rồi	:(")
 def Start(tai_khoan,mat_khau,id_kenh,ten_profile,Bien_so_profile,Dem_nhiem_vu):
@@ -84,7 +79,7 @@ def Start(tai_khoan,mat_khau,id_kenh,ten_profile,Bien_so_profile,Dem_nhiem_vu):
 		print('Cấu Hình Thất Bại')
 		rundelay(60)
 		main()
-	NVSub(hd,ten_profile,Bien_so_profile,Dem_nhiem_vu)
+	NVSub(hd,ten_profile,Bien_so_profile,Dem_nhiem_vu, id_kenh)
 def rundelay(k):
   while (k>0):
     print('                                        ', end='\r')
@@ -92,53 +87,40 @@ def rundelay(k):
     time.sleep(1)
     k=k-1
     print(' \033[1;31m=> \033[1;32m Đang Đợi Delay Khoảng:   '  +str(k), end='\r')
-def subYoutube(id, link,hd,ten_profile,Bien_so_profile,Dem_nhiem_vu):
-	if len(id) < 8:
-		# doTDSTask.TDSTask(chanel, driver)
-		print("Tạm Thời Hết Nhiệm Vụ TuongTacCheo")
-		rundelay(60)
-		Bien_so_profile = Bien_so_profile+1
-		main()
+def subYoutube(id, link,hd,ten_profile,Bien_so_profile,Dem_nhiem_vu,id_kenh):
 	options = webdriver.ChromeOptions()
 	options.add_argument(r'--user-data-dir=D:\\a tool\\profile\\User Data')
 	options.add_argument('profile-directory=Profile '+ten_profile)
 	options.add_argument('--mute-audio')
 	driver = webdriver.Chrome(executable_path=r'C:\\Program Files\\Google\Chrome\\Application\\chromedriver.exe', options=options)
 	driver.set_window_size(500,600)
-	# doTDSTask.TDSTask(chanel, driver):
-	#thu nho web
-	# driver.minimize_window()
-	spam = 0
-	id_tong = ''
-	y = 0
-	for i in id:
-		try:
-			dr = driver.get(link[y])
-			rundelay(20)
-		except:
-			pass
-		try:
-			#tag = '//button[@aria-label = "Đăng ký"]'
-			#bấm vào nút đăng kí
-			driver.find_element(By.XPATH,'/html/body/ytd-app/div[1]/ytd-page-manager/ytd-watch-flexy/div[5]/div[1]/div/div[2]/ytd-watch-metadata/div/div[2]/div[1]/div/ytd-subscribe-button-renderer/yt-button-shape/button/yt-touch-feedback-shape/div/div[2]').click()
-			print("["+str(Dem_nhiem_vu)+"] >> "+"\033[1;33;40mSub >> "+"\033[92mĐã Làm Nhiệm Vụ Sub:>> "+id[y])
-			Dem_nhiem_vu = Dem_nhiem_vu+1
-			rundelay(2)
-			if y == len(id)-1:
-			# làm len(id)-1 nhiệm vụ sẽ nhận tiền
-			# do len(id)-1 task, will receive gold
-				id_tong = id_tong +id[y]
-			else:
-				id_tong = id_tong +id[y] +','			
-			time.sleep(2)
-		except NoSuchElementException:
-			print('không kiếm được đường dẫn 1! Chuyển qua đường dẫn 2')
+	if len(id) < 8:
+		# doTDSTask.TDSTask(chanel, driver)
+		print("Tạm Thời Hết Nhiệm Vụ TuongTacCheo")
+		rundelay(60)
+		Bien_so_profile = Bien_so_profile+1
+		doTDSTask.TDSTask(id_kenh, driver)
+		main()
+	else:		
+		doTDSTask.TDSTask(id_kenh, driver)
+		#thu nho web
+		# driver.minimize_window()
+		spam = 0
+		id_tong = ''
+		y = 0
+		for i in id:
 			try:
-				
-				driver.find_element(By.XPATH,"/html/body/ytd-app/div[1]/ytd-page-manager/ytd-watch-flexy/div[5]/div[1]/div/div[2]/div[len(id)-1]/div[2]/div[2]/ytd-video-secondary-info-renderer/div/div/div/ytd-subscribe-button-renderer/tp-yt-paper-button/yt-formatted-string").click()
-											  
+				dr = driver.get(link[y])
+				rundelay(20)
+			except:
+				pass
+			try:
+				#tag = '//button[@aria-label = "Đăng ký"]'
+				#bấm vào nút đăng kí
+				driver.find_element(By.XPATH,'/html/body/ytd-app/div[1]/ytd-page-manager/ytd-watch-flexy/div[5]/div[1]/div/div[2]/ytd-watch-metadata/div/div[2]/div[1]/div/ytd-subscribe-button-renderer/yt-button-shape/button/yt-touch-feedback-shape/div/div[2]').click()
 				print("["+str(Dem_nhiem_vu)+"] >> "+"\033[1;33;40mSub >> "+"\033[92mĐã Làm Nhiệm Vụ Sub:>> "+id[y])
 				Dem_nhiem_vu = Dem_nhiem_vu+1
+				rundelay(2)
 				if y == len(id)-1:
 				# làm len(id)-1 nhiệm vụ sẽ nhận tiền
 				# do len(id)-1 task, will receive gold
@@ -146,11 +128,12 @@ def subYoutube(id, link,hd,ten_profile,Bien_so_profile,Dem_nhiem_vu):
 				else:
 					id_tong = id_tong +id[y] +','			
 				time.sleep(2)
-
-			except:
+			except NoSuchElementException:
+				print('không kiếm được đường dẫn 1! Chuyển qua đường dẫn 2')
 				try:
-					print("lỗi Khác! Chuyển qua đường dẫn 3.")
-					driver.find_element(By.XPATH,'/html/body/ytd-app/div[1]/ytd-page-manager/ytd-watch-flexy/div[5]/div[1]/div/div[2]/div[7]/div[2]/div[2]/ytd-video-secondary-info-renderer/div/div/div/ytd-subscribe-button-renderer/tp-yt-paper-button/yt-formatted-string').click()
+					
+					driver.find_element(By.XPATH,"/html/body/ytd-app/div[1]/ytd-page-manager/ytd-watch-flexy/div[5]/div[1]/div/div[2]/div[len(id)-1]/div[2]/div[2]/ytd-video-secondary-info-renderer/div/div/div/ytd-subscribe-button-renderer/tp-yt-paper-button/yt-formatted-string").click()
+												  
 					print("["+str(Dem_nhiem_vu)+"] >> "+"\033[1;33;40mSub >> "+"\033[92mĐã Làm Nhiệm Vụ Sub:>> "+id[y])
 					Dem_nhiem_vu = Dem_nhiem_vu+1
 					if y == len(id)-1:
@@ -160,56 +143,60 @@ def subYoutube(id, link,hd,ten_profile,Bien_so_profile,Dem_nhiem_vu):
 					else:
 						id_tong = id_tong +id[y] +','			
 					time.sleep(2)
-				except Exception as e:
-					print("Không tìm được đường dẫn! ")
-					pass
-				
 
-		except Exception as e:
-			print('Lỗi khác nữa! Đang mệt làm biếng fix rồi')
-			# print(e)
-			pass
-			# driver.quit()
+				except:
+					try:
+						print("lỗi Khác! Chuyển qua đường dẫn 3.")
+						driver.find_element(By.XPATH,'/html/body/ytd-app/div[1]/ytd-page-manager/ytd-watch-flexy/div[5]/div[1]/div/div[2]/div[7]/div[2]/div[2]/ytd-video-secondary-info-renderer/div/div/div/ytd-subscribe-button-renderer/tp-yt-paper-button/yt-formatted-string').click()
+						print("["+str(Dem_nhiem_vu)+"] >> "+"\033[1;33;40mSub >> "+"\033[92mĐã Làm Nhiệm Vụ Sub:>> "+id[y])
+						Dem_nhiem_vu = Dem_nhiem_vu+1
+						if y == len(id)-1:
+						# làm len(id)-1 nhiệm vụ sẽ nhận tiền
+						# do len(id)-1 task, will receive gold
+							id_tong = id_tong +id[y]
+						else:
+							id_tong = id_tong +id[y] +','			
+						time.sleep(2)
+					except Exception as e:
+						print("Không tìm được đường dẫn! ")
+						pass
+					
 
-		# if spam == 5:
-		# 	exit()
-		if y == len(id)-1:
-			try:		
-				nt=s.post("https://tuongtaccheo.com/youtube/kiemtien/subcheo/nhantien.php",data={"id":id_tong},headers=hd)
-				print(nt.json())
-				time.sleep(2)
-					# data = nt.json()
-					# print(data)
-				driver.close()
-				rundelay(3)
-			except:
+			except Exception as e:
+				print('Lỗi khác nữa! Đang mệt làm biếng fix rồi')
+				print(e)
 				pass
-		y = y+1
+			if y == len(id)-1:
+				try:		
+					nt=s.post("https://tuongtaccheo.com/youtube/kiemtien/subcheo/nhantien.php",data={"id":id_tong},headers=hd)
+					print(nt.json())
+					time.sleep(2)
+						# data = nt.json()
+						# print(data)
+					driver.close()
+					rundelay(3)
+				except:
+					pass
+			y = y+1
+			
+		NVSub(hd,ten_profile,Bien_so_profile,Dem_nhiem_vu, id_kenh)
 		
-	NVSub(hd,ten_profile,Bien_so_profile,Dem_nhiem_vu)
-	
 
 
 
-def NVSub(hd,ten_profile,Bien_so_profile,Dem_nhiem_vu):
+def NVSub(hd,ten_profile,Bien_so_profile,Dem_nhiem_vu, id_kenh):
 	like=s.get('https://tuongtaccheo.com/youtube/kiemtien/subcheo/getpost.php',headers=hd)
 	# print(like.json())
 	list_sub = []
 	list_video = []
 	for i in like.json():
-		# print(i)
-		# id=json.loads(like.text)[]['idpost']
 		id_sub = i['idpost']
 		id_video = i['link']
 		list_sub.append(str(id_sub))
 		list_video.append(str(id_video))
 	print(list_video)
-		# link=json.loads(like.text)[0]['link']
-	# id_sub = list_sub[0]
-	# link = list_video[0]
-	# print(list_sub[1],'\t',list_sub[2],'\t',list_sueb[3])
 	ten_profile = ten_profile
-	subYoutube(list_sub,list_video,hd,ten_profile,Bien_so_profile,Dem_nhiem_vu)
+	subYoutube(list_sub,list_video,hd,ten_profile,Bien_so_profile,Dem_nhiem_vu, id_kenh)
 if __name__ == '__main__':
 	
 	main()

@@ -2,19 +2,21 @@ import json, sys, os, time,re,colorama,requests,time,random
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
 s = requests.Session()
 
 def TDSTask(chanel, driver):
+	print('----------RUN doTDSTask---------------')
 	user_task = 'dotdstask' # tài khoản lưu xu
 	password_task = '0944058941nguyen' 
 	cookieTask = ''
 	def rundelay(k):
 		while (k>0):
-		print('                                        ', end='\r')
-		print(' \033[1;31m=> \033[1;32m Đang Đợi Delay Khoảng:   '  +str(k), end='\r')
-		time.sleep(1)
-		k=k-1
-		print(' \033[1;31m=> \033[1;32m Đang Đợi Delay Khoảng:   '  +str(k), end='\r')
+			print('                                        ', end='\r')
+			print(' \033[1;31m=> \033[1;32m Đang Đợi Delay Khoảng:   '  +str(k), end='\r')
+			time.sleep(1)
+			k=k-1
+			print(' \033[1;31m=> \033[1;32m Đang Đợi Delay Khoảng:   '  +str(k), end='\r')
 
 	def login(user_task, password_task):
 
@@ -37,6 +39,9 @@ def TDSTask(chanel, driver):
 		setUpChanel()
 		
 	def setUpChanel():
+		hd = {
+			'x-requested-with': 'XMLHttpRequest'
+		}
 
 		dat = {
 			'iddat': chanel
@@ -63,20 +68,24 @@ def TDSTask(chanel, driver):
 				'sec-fetch-site': 'same-origin',
 				'user-agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36'
 					}
-		loadTask = s.get('https://traodoisub.com/ex/youtube_follow/load.php',data= data,cookies=cookieTask).json()
-		print('--------------------TASK--------------------')
-		print(loadTask)
-		print('--------------------------------------------')
+			loadTask = s.get('https://traodoisub.com/ex/youtube_follow/load.php',data= data,cookies=cookieTask).json()
+			print('--------------------TASK--------------------')
+			print(loadTask)
+			print('--------------------------------------------')
 
-		try:
-			for i in loadTask['data']:
-			chanelSub = i['id']
-			linkVideo = i['link']
-			print(i['id'])
-			print(i['link'])
-			doTask(chanelSub, linkVideo)
-		except:
-			print('Hết Nhiệm Vụ')
+			try:
+				# count = 1 
+				for i in loadTask['data']:
+					chanelSub = i['id']
+					linkVideo = i['link']
+					print(i['id'])
+					print(i['link'])
+					doTask(chanelSub, linkVideo)
+					# count = count + 1
+			except Exception as e:
+				print('Error is: ', e, '\n in line 75')
+				print('Hết Nhiệm Vụ')
+				doneTask()
 			doneTask()
 	def doTask(chanelSub, linkVideo):
 		hd_cache = {
@@ -92,16 +101,17 @@ def TDSTask(chanel, driver):
 			'type': 'follow'
 		}
 
+		# if count == 1:
 		bat_dau=s.post("https://traodoisub.com/ex/youtube_follow/cache.php",data=data_batdau,headers=hd_cache,cookies=cookieTask)
-		# print('batdau==============================')
+			# print('batdau==============================')
 		print('Response Start Cache: ',bat_dau)
 		try:
 			dr = driver.get(linkVideo)
 			rd_delay = random.randint(25, 35)
 			rundelay(rd_delay)
-		except:
+		except Exception as e:
+			print('Error is: ', e)
 			print('Error in line is: 85')
-			exit()
 			pass
 		try:
 			dtt = {
@@ -120,9 +130,9 @@ def TDSTask(chanel, driver):
 				print("Subcribe: ", chanelSub)
 				rundelay(3)	
 			print('------------------------------')
-		except:
+		except Exception as e:
+			print('Error is: ', e)
 			print("Error in line is: 93")
-			exit()
 			pass
 
 	def doneTask():
@@ -134,11 +144,7 @@ def TDSTask(chanel, driver):
 			}
 		rundelay(5)
 		receiveTask = s.post("https://traodoisub.com/ex/youtube_follow/nhantien.php",data=dt,headers=hd_nhantien,cookies=cookieTask)
-		print('Response receiveTask', receiveTask.json())
-		# print('Chuyển kênh mới ')
-		# print('Tạm nghỉ')
-		# rundelay(60)
-		# main(dr,Bien_so_profile)	
+		print('Response receiveTask', receiveTask.json())		
 	def click(tag):
 		try:
 			driver.find_element(By.XPATH,tag).click()
@@ -146,11 +152,21 @@ def TDSTask(chanel, driver):
 		except NoSuchElementException:	
 			print('Không tìm được đường dẫn')
 			return False
-		except:
-			print('Lỗi Khác')
+		except Exception as e:
+			print('Error is: ', e)
+			print('Error in line: 146')
 			return False
 
 	login(user_task,password_task)
 
-	
+# options = webdriver.ChromeOptions()
+# options.add_argument(r'--user-data-dir=D:\\a tool\\profile\\User Data')
+# options.add_argument('profile-directory=Profile ' + numProfile)
+# options.add_argument('--mute-audio')
+# driver = webdriver.Chrome(executable_path=r'C:\\Program Files\\Google\Chrome\\Application\\chromedriver.exe', options=options)
+# driver.set_window_size(500,600)
+
+# chanel = 'UC8GNcJni3ayCeYbzwnPoayw'
+# TDSTask(chanel, driver)
+
 
